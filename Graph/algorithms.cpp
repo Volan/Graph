@@ -295,6 +295,63 @@ Edge* FindNegativeCycle(int V, Edge**E) {
 	return cycle;
 }
 
+ShortestPaths** FloydUorshell(int V, Edge**E) {
+	Edge *edge;
+	int i = 0, j = 0, k = 0;
+	double** shortest = (double**)(malloc(sizeof(double*) * V));
+	int** prev = (int**)(malloc(sizeof(int*) * V));
+	ShortestPaths** spaths = (ShortestPaths**)(malloc(sizeof(ShortestPaths*) * V));
+	for (i = 0; i < V; ++i) {
+		shortest[i] = (double*)(malloc(sizeof(double) * V));
+		prev[i] = (int*)(malloc(sizeof(int) * V));
+		spaths[i] = initializeSP(V, i);
+	}
+
+	for (i = 0; i < V; ++i) {
+		for (j = 0; j < V; ++j) {
+			prev[i][j] = NULL;
+			shortest[i][j] = DBL_MAX;
+		}
+		shortest[i][i] = 0;
+	}
+
+	for (i = 0; i < V; ++i) {
+		edge = E[i];
+		while (edge != NULL) {
+			shortest[i][edge->V] = edge->weight;
+			prev[i][edge->V] = i;
+			edge = edge->next;
+		}
+	}
+
+	for (k = 0; k < V - 1; ++k) {
+		for (i = 0; i < V; ++i) {
+			for (j = 0; j < V; ++j) {
+				if ((shortest[i][k] != DBL_MAX && shortest[k][j] != DBL_MAX) && shortest[i][j] > shortest[i][k] + shortest[k][j]) {
+					shortest[i][j] = shortest[i][k] + shortest[k][j];
+					prev[i][j] = prev[k][j];
+				}
+			}
+		}
+	}
+
+	for (i = 0; i < V; ++i) {
+		for (j = 0; j < V; ++j) {
+			spaths[i]->shortest[j] = shortest[i][j];
+			spaths[i]->prev[j] = prev[i][j];
+		}
+	}
+
+	for (i = 0; i < V; ++i) {
+		free(shortest[i]);
+		free(prev[i]);
+	}
+	free(shortest);
+	free(prev);
+
+	return spaths;
+}
+
 
 
 
