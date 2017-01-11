@@ -28,7 +28,7 @@ int main()
 
 	E[2] = addList(E[2], 3, 3);
 
-	E[3] = addList(E[3], 4, -8);
+	E[3] = addList(E[3], 4, 2);
 	E[3] = addList(E[3], 5, 2);
 
 	E[4] = addList(E[4], 1, 1);
